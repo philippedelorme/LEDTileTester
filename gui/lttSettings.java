@@ -202,7 +202,7 @@ class lttSettings extends JPanel
 
     private JPanel loadGplImage()
     {
-        ImageIcon image = new ImageIcon("resources/gplv3.png");
+        ImageIcon image = new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/gplv3.png")));
         JLabel label = new JLabel("", image, JLabel.CENTER);
         JPanel panel = new JPanel(new BorderLayout());
         panel.add( label, BorderLayout.CENTER );
