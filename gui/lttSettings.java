@@ -189,8 +189,8 @@ class lttSettings extends JPanel
         nbTileX.addChangeListener(nbTileListener);
         nbTileY.addChangeListener(nbTileListener);
 
-        sizeTileX = this.newSpinner(p, "Tile width", lttButton.WIDTH, 25, 10000, 1);
-        sizeTileY = this.newSpinner(p, "Tile height", lttButton.HEIGHT, 25, 10000, 1);
+        sizeTileX = this.newSpinner(p, "Tile width (px)", lttButton.WIDTH, 25, 10000, 1);
+        sizeTileY = this.newSpinner(p, "Tile height (px)", lttButton.HEIGHT, 25, 10000, 1);
         sizeTileX.addChangeListener(sizeTileListener);
         sizeTileY.addChangeListener(sizeTileListener);
 
