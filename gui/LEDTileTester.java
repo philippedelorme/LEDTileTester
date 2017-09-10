@@ -44,6 +44,76 @@ public class LEDTileTester
     private lttPanel panel;
 
 
+    private class Dispatcher implements KeyEventDispatcher
+    {
+        public boolean dispatchKeyEvent(KeyEvent e)
+        {
+            if (LEDTileTester.this.settings.inputHasFocus())
+                return false;
+
+            if (e.getID() == KeyEvent.KEY_PRESSED)
+            {
+                switch (e.getKeyCode())
+                {
+                    case KeyEvent.VK_Q:
+                        LOGGER.info("Good bye!");
+                        System.exit(0);
+                        break;
+
+                        // Toggle settings display
+                    case KeyEvent.VK_S:
+                        LEDTileTester.this.settings.setVisible(!LEDTileTester.this.settings.isVisible());
+                        break;
+
+                        // Toggle fullscreen
+                    case KeyEvent.VK_F:
+                        LEDTileTester.this.frame.setVisible(false);
+                        LEDTileTester.this.frame.dispose();
+                        if (frame.isUndecorated())
+                        {
+                            LEDTileTester.this.frame.setExtendedState(JFrame.NORMAL); 
+                            LEDTileTester.this.frame.setUndecorated(false);
+                        }
+                        else
+                        {
+                            LEDTileTester.this.frame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+                            LEDTileTester.this.frame.setUndecorated(true);
+                        }
+                        LEDTileTester.this.frame.setVisible(true);
+                        break;
+
+                        // Resize +1 pixel width
+                    case KeyEvent.VK_RIGHT:
+                        LEDTileTester.this.panel.button_width += 1;
+                        LEDTileTester.this.panel.refreshButtonSize();
+                        break;
+
+                        // Resize -1 pixel width
+                    case KeyEvent.VK_LEFT:
+                        LEDTileTester.this.panel.button_width -= 1;
+                        LEDTileTester.this.panel.refreshButtonSize();
+                        break;
+
+                        // Resize +1 pixel height
+                    case KeyEvent.VK_UP:
+                        LEDTileTester.this.panel.button_heigth += 1;
+                        LEDTileTester.this.panel.refreshButtonSize();
+                        break;
+
+                        // Resize -1 pixel height
+                    case KeyEvent.VK_DOWN:
+                        LEDTileTester.this.panel.button_heigth -= 1;
+                        LEDTileTester.this.panel.refreshButtonSize();
+                        break;
+                }
+                settings.refreshValues();
+                LEDTileTester.this.panel.grabFocus();
+            }
+            return false;
+        }
+    }
+
+
     public LEDTileTester()
     {
         this.build();
@@ -63,7 +133,6 @@ public class LEDTileTester
         this.panel = new lttPanel(lttPanel.DEFAULT_WIDTH, lttPanel.DEFAULT_HEIGHT);
         this.settings = new lttSettings(this.frame, this.panel);
         this.panel.setSettings(this.settings);
-        this.panel.setFrame(this.frame);
 
         JPanel p = new JPanel();
         p.add(this.settings);
@@ -71,6 +140,8 @@ public class LEDTileTester
         //p.setLayout(new BoxLayout(p, BoxLayout.PAGE_AXIS));
         //this.frame.getContentPane().add(p, BorderLayout.NORTH);
         this.frame.getContentPane().add(p);
+
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new Dispatcher());
 
         this.frame.pack();
     }

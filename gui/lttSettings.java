@@ -113,6 +113,7 @@ class lttSettings extends JPanel
         p.setBorder(BorderFactory.createEmptyBorder(BORDER, BORDER, BORDER, BORDER));
         p.add(new JLabel("'q': quit"));
         p.add(new JLabel("'f': toggle fullscreen"));
+        p.add(new JLabel("'f': hide/show settings"));
         p.add(new JLabel("'<right/left>': +/-1 pixel for width"));
         p.add(new JLabel("'<up/down>': +/-1 pixel for height"));
         container.add(p);
