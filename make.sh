@@ -19,7 +19,7 @@ echo "Compiling $PROG ..."
 javac gui/$PROG.java || exit 1
 
 echo "Creating JAR file $PROG.jar ..."
-jar cvfm $PROG.jar MANIFEST.MF COPYING README utils/*.class gui/*.class
+jar cvfm $PROG.jar MANIFEST.MF COPYING README.md utils/*.class gui/*.class
 
 clean
 
