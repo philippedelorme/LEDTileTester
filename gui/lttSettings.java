@@ -52,6 +52,8 @@ class lttSettings extends JPanel
 
     private ChangeListener pickerListener, nbTileListener, sizeTileListener;
 
+    static final int BORDER = 10;
+
 
     public lttSettings(JFrame frame, lttPanel panel)
     {
@@ -62,6 +64,7 @@ class lttSettings extends JPanel
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         build();
+        refreshValues();
     }
 
 
@@ -70,6 +73,13 @@ class lttSettings extends JPanel
         // This is the mani container for everything but the text part
         container = new JPanel();
         container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
+        container.setBorder(BorderFactory.createEmptyBorder(BORDER, BORDER, BORDER, BORDER));
+
+        //
+        // Load GPL image
+        //
+        container.add(this.loadGplImage());
+
 
         //
         // Text setter
@@ -93,10 +103,26 @@ class lttSettings extends JPanel
             }
         });
         JPanel p = new JPanel();
+        p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
         p.add(textLabel);
         p.add(textInput);
+        container.add(p);
 
-        add(p);
+        p = new JPanel();
+        p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
+        p.setBorder(BorderFactory.createEmptyBorder(BORDER, BORDER, BORDER, BORDER));
+        p.add(new JLabel("'q': quit"));
+        p.add(new JLabel("'f': toggle fullscreen"));
+        p.add(new JLabel("'<right/left>': +/-1 pixel for width"));
+        p.add(new JLabel("'<up/down>': +/-1 pixel for height"));
+        container.add(p);
+
+        add(container);
+
+
+        container = new JPanel();
+        container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
+        container.setBorder(BorderFactory.createEmptyBorder(BORDER, BORDER, BORDER, BORDER));
 
 
         //
@@ -154,22 +180,33 @@ class lttSettings extends JPanel
             }
         };
 
-        JPanel c = new JPanel(new GridLayout(0,2));
-        c.setBorder(BorderFactory.createTitledBorder("Number and size of tiles"));
+        p = new JPanel(new GridLayout(0,2));
+        p.setBorder(BorderFactory.createTitledBorder("Number and size of tiles"));
 
-        nbTileX = this.newSpinner(c, "Tile # - horizontal", lttPanel.DEFAULT_WIDTH, 1, 10000, 1);
-        nbTileY = this.newSpinner(c, "Tile # - vertical", lttPanel.DEFAULT_HEIGHT, 1, 10000, 1);
+        nbTileX = this.newSpinner(p, "Tile # - horizontal", lttPanel.DEFAULT_WIDTH, 1, 10000, 1);
+        nbTileY = this.newSpinner(p, "Tile # - vertical", lttPanel.DEFAULT_HEIGHT, 1, 10000, 1);
         nbTileX.addChangeListener(nbTileListener);
         nbTileY.addChangeListener(nbTileListener);
 
-        sizeTileX = this.newSpinner(c, "Tile size - horizontal", lttButton.WIDTH, 25, 10000, 1);
-        sizeTileY = this.newSpinner(c, "Tile size - vertical", lttButton.HEIGHT, 25, 10000, 1);
+        sizeTileX = this.newSpinner(p, "Tile width", lttButton.WIDTH, 25, 10000, 1);
+        sizeTileY = this.newSpinner(p, "Tile height", lttButton.HEIGHT, 25, 10000, 1);
         sizeTileX.addChangeListener(sizeTileListener);
         sizeTileY.addChangeListener(sizeTileListener);
 
-        container.add(c);
+        container.add(p);
 
         add(container);
+    }
+
+
+    private JPanel loadGplImage()
+    {
+        ImageIcon image = new ImageIcon("resources/gplv3.png");
+        JLabel label = new JLabel("", image, JLabel.CENTER);
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add( label, BorderLayout.CENTER );
+        panel.setBorder(BorderFactory.createEmptyBorder(BORDER, BORDER, BORDER, BORDER));
+        return panel;
     }
 
 
@@ -230,6 +267,25 @@ class lttSettings extends JPanel
         }
 
         return spinner;
+    }
+
+
+    /**
+     * Refresh the values displayed in the spinner
+     * because they may change with the key bindings
+     */
+    public void refreshValues()
+    {
+        nbTileX.setValue(Integer.valueOf(panel.width));
+        nbTileY.setValue(Integer.valueOf(panel.height));
+        sizeTileX.setValue(Integer.valueOf(panel.button_width));
+        sizeTileY.setValue(Integer.valueOf(panel.button_heigth));
+    }
+
+
+    public boolean inputHasFocus()
+    {
+        return textInput.isFocusOwner();
     }
 }
 

@@ -31,6 +31,9 @@ import java.util.logging.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import utils.Utils;
 import gui.lttButton;
 import gui.lttPopupMenu;
@@ -46,6 +49,7 @@ class lttPanel extends JPanel
     public static final int BORDER_WIDTH = 1;
 
     private final List<lttButton> list = new ArrayList<lttButton>();
+    private JFrame frame;
     private lttSettings settings;
     private lttPopupMenu popup;
 
@@ -57,6 +61,84 @@ class lttPanel extends JPanel
     public int height;
     public int button_width;
     public int button_heigth;
+
+
+    private class Dispatcher implements KeyEventDispatcher
+    {
+        public boolean dispatchKeyEvent(KeyEvent e)
+        {
+            if (lttPanel.this.settings.inputHasFocus())
+                return false;
+
+            if (e.getID() == KeyEvent.KEY_PRESSED)
+            {
+                switch (e.getKeyCode())
+                {
+                    case KeyEvent.VK_Q:
+                        LOGGER.info("Good bye!");
+                        System.exit(0);
+                        break;
+
+                        // Add 1 tile
+                    /*case KeyEvent.VK_PLUS:
+                        lttPanel.this.width += 1;
+                        lttPanel.this.refresh();
+                        break;
+
+                        // Remove 1 tile
+                    case KeyEvent.VK_MINUS:
+                        lttPanel.this.width -= 1;
+                        lttPanel.this.refresh();
+                        break;*/
+
+                        // Toggle fullscreen
+                    case KeyEvent.VK_F:
+                        lttPanel.this.frame.setVisible(false);
+                        lttPanel.this.frame.dispose();
+                        if (frame.isUndecorated())
+                        {
+                            lttPanel.this.frame.setExtendedState(JFrame.NORMAL); 
+                            lttPanel.this.frame.setUndecorated(false);
+                        }
+                        else
+                        {
+                            lttPanel.this.frame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+                            lttPanel.this.frame.setUndecorated(true);
+                        }
+                        lttPanel.this.frame.setVisible(true);
+                        break;
+
+                        // Resize +1 pixel width
+                    case KeyEvent.VK_RIGHT:
+                        lttPanel.this.button_width += 1;
+                        lttPanel.this.refreshButtonSize();
+                        break;
+
+                        // Resize -1 pixel width
+                    case KeyEvent.VK_LEFT:
+                        lttPanel.this.button_width -= 1;
+                        lttPanel.this.refreshButtonSize();
+                        break;
+
+                        // Resize +1 pixel height
+                    case KeyEvent.VK_UP:
+                        lttPanel.this.button_heigth += 1;
+                        lttPanel.this.refreshButtonSize();
+                        break;
+
+                        // Resize -1 pixel height
+                    case KeyEvent.VK_DOWN:
+                        lttPanel.this.button_heigth -= 1;
+                        lttPanel.this.refreshButtonSize();
+                        break;
+                }
+                settings.refreshValues();
+                lttPanel.this.grabFocus();
+            }
+            return false;
+        }
+    }
+
 
     public lttPanel(int width, int height)
     {
@@ -71,6 +153,8 @@ class lttPanel extends JPanel
         this.button_width = lttButton.WIDTH;
         this.button_heigth = lttButton.HEIGHT;
         this.refresh();
+
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new Dispatcher());
     }
 
 
@@ -78,6 +162,12 @@ class lttPanel extends JPanel
     {
         this.settings = settings;
         this.popup = new lttPopupMenu(this.settings);
+    }
+
+
+    public void setFrame(final JFrame frame)
+    {
+        this.frame = frame;
     }
 
 
@@ -126,7 +216,7 @@ class lttPanel extends JPanel
     private lttButton createGridButton(final int row, final int col, String text)
     {
         if (text == null)
-            text = "r" + row + ",c" + col;
+            text = row + "," + col;
         else
             // expand row and column
             text = text.replace("%r", Integer.toString(row)).replace("%c", Integer.toString(col));
@@ -218,6 +308,7 @@ class lttPanel extends JPanel
         setPreferredSize(new Dimension(width * button_width, height * button_heigth));
         revalidate();
         repaint();
+        grabFocus();
     }
 }
 

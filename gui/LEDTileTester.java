@@ -63,6 +63,7 @@ public class LEDTileTester
         this.panel = new lttPanel(lttPanel.DEFAULT_WIDTH, lttPanel.DEFAULT_HEIGHT);
         this.settings = new lttSettings(this.frame, this.panel);
         this.panel.setSettings(this.settings);
+        this.panel.setFrame(this.frame);
 
         JPanel p = new JPanel();
         p.add(this.settings);
@@ -74,11 +75,13 @@ public class LEDTileTester
         this.frame.pack();
     }
 
+
     private void display()
     {
         this.frame.setLocationRelativeTo(null);
         this.frame.setVisible(true);
     }
+
 
     public static void main(String[] args)
     {
