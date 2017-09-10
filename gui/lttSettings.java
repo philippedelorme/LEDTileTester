@@ -74,7 +74,7 @@ class lttSettings extends JPanel
         //
         // Text setter
         //
-        textLabel = new JLabel("Text: ");
+        textLabel = new JLabel("Text (%r and %c to expand row and column numbers): ");
         textInput = new JTextField(50);
         textInput.getDocument().addDocumentListener(new DocumentListener() {
             public void changedUpdate(DocumentEvent e) {

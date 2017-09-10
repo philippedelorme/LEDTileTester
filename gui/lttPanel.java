@@ -127,6 +127,9 @@ class lttPanel extends JPanel
     {
         if (text == null)
             text = "r" + row + ",c" + col;
+        else
+            // expand row and column
+            text = text.replace("%r", Integer.toString(row)).replace("%c", Integer.toString(col));
 
         final lttButton button = new lttButton(text);
 
@@ -166,9 +169,15 @@ class lttPanel extends JPanel
         currentText = str;
 
         LOGGER.info("Set text " + currentText);
-        for (lttButton button: list)
-        {
-            button.setText(str);
+
+        int w = width;
+        int h = height;
+        for (int i = 0; i < w * h; i++) {
+            int row = i / w;
+            int col = i % w;
+            lttButton button = getGridButton(row, col);
+            // expand row and column
+            button.setText(str.replace("%r", Integer.toString(row)).replace("%c", Integer.toString(col)));
         }
     }
 
